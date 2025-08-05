@@ -43,6 +43,16 @@ namespace uPalette.Editor.Core.Shared
             return store.CharacterStyleTMPPalette;
         }
     }
+    
+    
+    [CustomPropertyDrawer(typeof(CharacterStyleLocalizedTMPEntryId))]
+    internal sealed class CharacterStyleEntryIdLocalizedTMPDrawer : EntryIdDrawer<CharacterStyleLocalizedTMP>
+    {
+        protected override Palette<CharacterStyleLocalizedTMP> GetPalette(PaletteStore store)
+        {
+            return store.CharacterStyleLocalizedTMPPalette;
+        }
+    }
 
     internal abstract class EntryIdDrawer<T> : PropertyDrawer
     {

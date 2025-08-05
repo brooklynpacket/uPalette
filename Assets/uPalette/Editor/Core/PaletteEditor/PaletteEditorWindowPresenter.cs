@@ -13,6 +13,7 @@ namespace uPalette.Editor.Core.PaletteEditor
         private readonly UPaletteEditorGUIState _guiState;
         private PaletteEditorWindowContentsViewPresenter<CharacterStyle> _characterStyleContentsViewPresenter;
         private PaletteEditorWindowContentsViewPresenter<CharacterStyleTMP> _characterStyleTMPContentsViewPresenter;
+        private PaletteEditorWindowContentsViewPresenter<CharacterStyleLocalizedTMP> _characterStyleLocalizedTMPContentsViewPresenter;
         private PaletteEditorWindowContentsViewPresenter<Color> _colorContentsViewPresenter;
         private PaletteEditorEmptyViewPresenter _emptyViewPresenter;
         private PaletteEditorWindowContentsViewPresenter<Gradient> _gradientContentsViewPresenter;
@@ -43,6 +44,7 @@ namespace uPalette.Editor.Core.PaletteEditor
             _gradientContentsViewPresenter?.Dispose();
             _characterStyleContentsViewPresenter?.Dispose();
             _characterStyleTMPContentsViewPresenter?.Dispose();
+            _characterStyleLocalizedTMPContentsViewPresenter?.Dispose();
             _emptyViewPresenter?.Dispose();
             _disposables.Dispose();
         }
@@ -66,6 +68,9 @@ namespace uPalette.Editor.Core.PaletteEditor
             _characterStyleTMPContentsViewPresenter =
                 new PaletteEditorWindowContentsViewPresenter<CharacterStyleTMP>(store.CharacterStyleTMPPalette,
                     view.CharacterStyleTMPContentsView);
+            _characterStyleLocalizedTMPContentsViewPresenter =
+                new PaletteEditorWindowContentsViewPresenter<CharacterStyleLocalizedTMP>(store.CharacterStyleLocalizedTMPPalette,
+                    view.CharacterStyleLocalizedTMPContentsView);
 
             view.SetMode(PaletteEditorWindow.Mode.Contents);
         }
@@ -76,6 +81,7 @@ namespace uPalette.Editor.Core.PaletteEditor
             _gradientContentsViewPresenter?.Dispose();
             _characterStyleContentsViewPresenter?.Dispose();
             _characterStyleTMPContentsViewPresenter?.Dispose();
+            _characterStyleLocalizedTMPContentsViewPresenter?.Dispose();
             _emptyViewPresenter?.Dispose();
 
             _emptyViewPresenter = new PaletteEditorEmptyViewPresenter(view.EmptyView);

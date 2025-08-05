@@ -14,6 +14,7 @@ namespace uPalette.Editor.Core.PaletteEditor
         private IPaletteEditorWindowContentsViewController _activeContentsViewController;
         private PaletteEditorWindowContentsViewController<CharacterStyle> _characterStyleContentsViewController;
         private PaletteEditorWindowContentsViewController<CharacterStyleTMP> _characterStyleTMPContentsViewController;
+        private PaletteEditorWindowContentsViewController<CharacterStyleLocalizedTMP> _characterStyleLocalizedTMPContentsViewController;
         private PaletteEditorWindowContentsViewController<Color> _colorContentsViewController;
 
         private EditPaletteStoreService _editService;
@@ -68,6 +69,7 @@ namespace uPalette.Editor.Core.PaletteEditor
             _gradientContentsViewController?.Dispose();
             _characterStyleContentsViewController?.Dispose();
             _characterStyleTMPContentsViewController?.Dispose();
+            _characterStyleLocalizedTMPContentsViewController?.Dispose();
             _emptyViewController?.Dispose();
 
             _editService = new EditPaletteStoreService(store, new GenerateNameEnumsFileService(store));
@@ -84,6 +86,10 @@ namespace uPalette.Editor.Core.PaletteEditor
             _characterStyleTMPContentsViewController =
                 new PaletteEditorWindowContentsViewController<CharacterStyleTMP>(store.CharacterStyleTMPPalette,
                     _editService, view.CharacterStyleTMPContentsView);
+            _characterStyleLocalizedTMPContentsViewController =
+                new PaletteEditorWindowContentsViewController<CharacterStyleLocalizedTMP>(store.CharacterStyleLocalizedTMPPalette,
+                    _editService, view.CharacterStyleLocalizedTMPContentsView);
+            
 
             _activeContentsViewController = GetPerTypeController(_guiState.ActivePaletteType.Value);
         }
@@ -94,6 +100,7 @@ namespace uPalette.Editor.Core.PaletteEditor
             _gradientContentsViewController?.Dispose();
             _characterStyleContentsViewController?.Dispose();
             _characterStyleTMPContentsViewController?.Dispose();
+            _characterStyleLocalizedTMPContentsViewController.Dispose();
             _emptyViewController?.Dispose();
 
             _emptyViewController = new PaletteEditorWindowEmptyViewController(view.EmptyView);
@@ -119,6 +126,8 @@ namespace uPalette.Editor.Core.PaletteEditor
                     return _characterStyleContentsViewController;
                 case PaletteType.CharacterStyleTMP:
                     return _characterStyleTMPContentsViewController;
+                case PaletteType.CharacterStyleLocalizedTMP:
+                    return _characterStyleLocalizedTMPContentsViewController;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(type), type, null);
             }

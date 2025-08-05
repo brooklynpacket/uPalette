@@ -20,12 +20,14 @@ namespace uPalette.Runtime.Core
         [SerializeField] private GradientPalette _gradientPalette = new GradientPalette();
         [SerializeField] private CharacterStylePalette _characterStylePalette = new CharacterStylePalette();
         [SerializeField] private CharacterStyleTMPPalette _characterStyleTMPPalette = new CharacterStyleTMPPalette();
+        [SerializeField] private CharacterStyleLocalizedTMPPalette _characterStyleLocalizedTMPPalette = new CharacterStyleLocalizedTMPPalette();
         [SerializeField] private MissingEntryErrorLevel _missingEntryErrorLevel = MissingEntryErrorLevel.Warning;
 
         public Palette<Color> ColorPalette => _colorPalette;
         public Palette<Gradient> GradientPalette => _gradientPalette;
         public Palette<CharacterStyle> CharacterStylePalette => _characterStylePalette;
         public Palette<CharacterStyleTMP> CharacterStyleTMPPalette => _characterStyleTMPPalette;
+        public Palette<CharacterStyleLocalizedTMP> CharacterStyleLocalizedTMPPalette => _characterStyleLocalizedTMPPalette;
 
         public MissingEntryErrorLevel MissingEntryErrorLevel
         {
