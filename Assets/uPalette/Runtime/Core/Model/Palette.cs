@@ -380,6 +380,41 @@ namespace uPalette.Runtime.Core.Model
         }
 
         protected abstract T GetDefaultValue();
+        
+        internal void MergeFrom(Palette<T> other)
+        {
+            foreach (var theme in other._themes)
+            {
+                if (!_themes.ContainsKey(theme.Key))
+                {
+                    _themes[theme.Key] = theme.Value;
+                }
+            }
+            foreach (var entry in other._entries)
+            {
+                if (_entries.ContainsKey(entry.Key)) // we have this entry, set other Theme values
+                {
+                    foreach (var theme in other._themes.Keys)
+                    {
+                        _entries[entry.Key].TryGetValue(theme, out var targetValue);
+                        entry.Value.TryGetValue(theme, out var sourceValue);
+                        if (targetValue != null && sourceValue != null)
+                            targetValue.SetValueAndNotify(sourceValue.Value);
+                    }
+                }
+                else // add the whole entry completely at the end of the list
+                {
+                    _entries[entry.Key] = new Entry<T>(entry.Key);
+                    foreach (var theme in _themes.Keys) // we've added all themes above
+                    {
+                        entry.Value.TryGetValue(theme, out var sourceValue);
+                        _entries[entry.Key].AddValue(theme, sourceValue != null ? sourceValue.Value : GetDefaultValue());
+                    }
+                    _entryOrders.Add(entry.Key);
+                }
+            }
+            SetActiveTheme(other._activeThemeId);
+        }
 
         internal IEnumerable<(string id, string name)> GetThemeIdAndNames(
             char folderDelimiter,

@@ -15,19 +15,20 @@ namespace uPalette.Runtime.Core
     public sealed class PaletteStore : ScriptableObject
     {
         private static PaletteStore _instance;
+#if UNITY_EDITOR
+        private static PaletteStore _editorInstance;
+#endif
 
         [SerializeField] private ColorPalette _colorPalette = new ColorPalette();
         [SerializeField] private GradientPalette _gradientPalette = new GradientPalette();
         [SerializeField] private CharacterStylePalette _characterStylePalette = new CharacterStylePalette();
         [SerializeField] private CharacterStyleTMPPalette _characterStyleTMPPalette = new CharacterStyleTMPPalette();
-        [SerializeField] private CharacterStyleLocalizedTMPPalette _characterStyleLocalizedTMPPalette = new CharacterStyleLocalizedTMPPalette();
         [SerializeField] private MissingEntryErrorLevel _missingEntryErrorLevel = MissingEntryErrorLevel.Warning;
 
         public Palette<Color> ColorPalette => _colorPalette;
         public Palette<Gradient> GradientPalette => _gradientPalette;
         public Palette<CharacterStyle> CharacterStylePalette => _characterStylePalette;
         public Palette<CharacterStyleTMP> CharacterStyleTMPPalette => _characterStyleTMPPalette;
-        public Palette<CharacterStyleLocalizedTMP> CharacterStyleLocalizedTMPPalette => _characterStyleLocalizedTMPPalette;
 
         public MissingEntryErrorLevel MissingEntryErrorLevel
         {
@@ -40,21 +41,38 @@ namespace uPalette.Runtime.Core
             get
             {
 #if UNITY_EDITOR
-                if (_instance == null)
-                    _instance = LoadAsset();
-#else
+                if (_editorInstance == null)
+                    _editorInstance = LoadAsset();
+#endif
                 if (_instance == null)
                     _instance = CreateInstance<PaletteStore>();
+                
+#if UNITY_EDITOR
+                if (!Application.isPlaying)
+                    return _editorInstance;
 #endif
                 return _instance;
             }
         }
 
-        private void OnEnable()
+        public void OnEnable()
         {
-#if !UNITY_EDITOR
-            _instance = this;
-#endif
+            if (_instance == null)
+            {
+                _instance = this;
+            }
+            else if (Application.isPlaying)
+            {
+                _instance.MergeFrom(this);
+            }
+        }
+        
+        private void MergeFrom(PaletteStore other)
+        {
+            _colorPalette.MergeFrom(other._colorPalette);
+            _gradientPalette.MergeFrom(other._gradientPalette);
+            _characterStylePalette.MergeFrom(other._characterStylePalette);
+            _characterStyleTMPPalette.MergeFrom(other._characterStyleTMPPalette);
         }
 
 #if UNITY_EDITOR
