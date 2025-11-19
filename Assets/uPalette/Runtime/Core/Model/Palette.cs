@@ -115,10 +115,19 @@ namespace uPalette.Runtime.Core.Model
             // Synchronize with active values.
             foreach (var entry in _entries.Values)
             {
-                var valueProperty = _activeValues[entry.Id];
+                var valueProperty = new ObservableProperty<T>();
+                if (_activeValues.ContainsKey(entry.Id))
+                {
+                    valueProperty = _activeValues[entry.Id];
+                }
+                else
+                {
+                    _activeValues[entry.Id] = valueProperty;
+                }
+
                 entry.Values[themeId]
-                    .Subscribe(x => valueProperty.SetValueAndNotify(x))
-                    .DisposeWith(_activeThemeDisposables);
+                        .Subscribe(x => valueProperty.SetValueAndNotify(x))
+                        .DisposeWith(_activeThemeDisposables);
             }
 
             var theme = _themes[themeId];

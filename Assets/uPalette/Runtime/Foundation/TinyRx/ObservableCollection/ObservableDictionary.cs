@@ -69,6 +69,12 @@ namespace uPalette.Runtime.Foundation.TinyRx.ObservableCollection
             set
             {
                 Assert.IsFalse(_didDispose);
+                
+                if (!_internalDictionary.ContainsKey(key))
+                {
+                    Add(key, value);
+                    return;
+                }
 
                 var oldValue = _internalDictionary[key];
                 if (Equals(oldValue, value))
