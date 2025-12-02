@@ -115,7 +115,7 @@ namespace uPalette.Runtime.Core.Model
             // Synchronize with active values.
             foreach (var entry in _entries.Values)
             {
-                var valueProperty = null;
+                ObservableProperty<T> valueProperty = null;
                 if (_activeValues.ContainsKey(entry.Id))
                 {
                     valueProperty = _activeValues[entry.Id];
